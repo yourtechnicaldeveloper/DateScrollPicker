@@ -45,6 +45,9 @@ open class DateScrollPicker: UIView {
         }
     }
     
+    private var minDate: Date?
+    
+    private var maxDate: Date?
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -72,9 +75,16 @@ open class DateScrollPicker: UIView {
         manager.format = format
     }
     
+    open func setMinMaxDates(minDate: Date? = nil, maxDate: Date? = nil) {
+        self.minDate = minDate
+        self.maxDate = maxDate
+        dateItems = []
+        setupInitialDays()
+    }
+    
     private func setupInitialDays() {
-        let monthStartDate = Date().firstDateOfMonth().addMonth(-12)!
-        let monthEndDate = Date().firstDateOfMonth().addMonth(12)!
+        let monthStartDate = minDate ?? Date().firstDateOfMonth().addMonth(-12)!
+        let monthEndDate = maxDate ?? Date().firstDateOfMonth().addMonth(12)!
         var currentDate = monthStartDate
         
         while currentDate < monthEndDate {
@@ -156,9 +166,15 @@ extension DateScrollPicker {
         switch insert {
         case .previous:
             newDays = manager.insertPreviousMonthDays(current: dateItems)
+            if let minDate = minDate {
+                newDays = newDays.filter({ $0.date >= minDate })
+            }
             dateItems.insert(contentsOf: newDays, at: 0)
         case .next:
             newDays = manager.insertNextMonthDays(current: dateItems)
+            if let maxDate = maxDate {
+                newDays = newDays.filter({ $0.date <= maxDate })
+            }
             dateItems.append(contentsOf: newDays)
         }
         
