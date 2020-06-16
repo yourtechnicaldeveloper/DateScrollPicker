@@ -166,15 +166,9 @@ extension DateScrollPicker {
         switch insert {
         case .previous:
             newDays = manager.insertPreviousMonthDays(current: dateItems)
-            if let minDate = minDate {
-                newDays = newDays.filter({ $0.date >= minDate })
-            }
             dateItems.insert(contentsOf: newDays, at: 0)
         case .next:
             newDays = manager.insertNextMonthDays(current: dateItems)
-            if let maxDate = maxDate {
-                newDays = newDays.filter({ $0.date <= maxDate })
-            }
             dateItems.append(contentsOf: newDays)
         }
         
@@ -221,10 +215,14 @@ extension DateScrollPicker: UICollectionViewDelegate, UICollectionViewDataSource
     
     public func scrollViewDidScroll(_ scrollView: UIScrollView) {
         if collectionView.contentOffset.x < 10 {
-            insertNewItems(.previous)
+            if minDate == nil {
+                insertNewItems(.previous)
+            }
         }
         if collectionView.contentOffset.x > collectionView!.contentSize.width - collectionView.frame.size.width {
-            insertNewItems(.next)
+            if maxDate == nil {
+                insertNewItems(.next)
+            }
         }
         if format.fadeEnabled {
             collectionView.updateFadeCells()
