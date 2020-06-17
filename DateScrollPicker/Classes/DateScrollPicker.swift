@@ -241,6 +241,27 @@ extension DateScrollPicker: UICollectionViewDelegateFlowLayout {
     public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         return CGSize(width: collectionView.frame.size.width / CGFloat(format.days), height: collectionView.frame.size.height)
     }
+    
+    public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
+        
+        let cellWidth = collectionView.frame.size.width / CGFloat(format.days)
+        
+        
+        guard cellWidth * CGFloat(collectionView.numberOfItems(inSection: 0)) < collectionView.frame.width  else {
+            return .zero
+        }
+        
+        /// Center items horizontally if total width of items is less than the collection view width
+        
+        let totalCellWidth = cellWidth * CGFloat(collectionView.numberOfItems(inSection: 0))
+        let totalSpacingWidth = CGFloat(0 * (collectionView.numberOfItems(inSection: 0) - 1))
+        
+        let leftInset = (collectionView.layer.frame.size.width - CGFloat(totalCellWidth + totalSpacingWidth)) / 2
+        let rightInset = leftInset
+        
+        return UIEdgeInsets(top: 0, left: leftInset, bottom: 0, right: rightInset)
+
+    }
 }
 
 extension DateScrollPicker: DateViewCellDataSource {
