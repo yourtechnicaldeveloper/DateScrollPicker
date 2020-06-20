@@ -14,6 +14,10 @@ protocol DateViewCellDataSource {
     func dateViewCell(_ dateViewCell: DateViewCell, bottomAttributedStringByDate date: Date) -> NSAttributedString?
     func dateViewCell(_ dateViewCell: DateViewCell, dataAttributedStringByDate date: Date) -> NSAttributedString?
     func dateViewCell(_ dateViewCell: DateViewCell, dotColorByDate date: Date) -> UIColor?
+    func dateViewCell(_ dateViewCell: DateViewCell, topTextColorByDate date: Date) -> UIColor?
+    func dateViewCell(_ dateViewCell: DateViewCell, mediumTextColorByDate date: Date) -> UIColor?
+    func dateViewCell(_ dateViewCell: DateViewCell, bottomTextColorByDate date: Date) -> UIColor?
+    func dateViewCell(_ dateViewCell: DateViewCell, dayBackgroundColorByDate date: Date) -> UIColor?
 }
 
 final class DateViewCell: UICollectionViewCell {
@@ -67,10 +71,35 @@ final class DateViewCell: UICollectionViewCell {
     /// Highlighted
     var isOn: Bool = false {
         didSet {
-            containerView.backgroundColor = isOn ? format.dayBackgroundSelectedColor : format.dayBackgroundColor
-            topLabel.textColor = isOn ? format.topTextSelectedColor : format.topTextColor
-            mediumLabel.textColor = isOn ? format.mediumTextSelectedColor : format.mediumTextColor
-            bottomLabel.textColor = isOn ? format.bottomTextSelectedColor : format.bottomTextColor
+            
+            if isOn {
+                if let color = dataSource?.dateViewCell(self, dayBackgroundColorByDate: self.date) {
+                    containerView.backgroundColor = color
+                } else {
+                    containerView.backgroundColor = format.dayBackgroundSelectedColor
+                }
+            } else {
+                containerView.backgroundColor = isOn ? format.dayBackgroundSelectedColor : format.dayBackgroundColor
+            }
+            
+            if let color = dataSource?.dateViewCell(self, topTextColorByDate: self.date) {
+                topLabel.textColor = color
+            } else {
+                topLabel.textColor = isOn ? format.topTextSelectedColor : format.topTextColor
+            }
+            
+            if let color = dataSource?.dateViewCell(self, mediumTextColorByDate: self.date) {
+                mediumLabel.textColor = color
+            } else {
+                mediumLabel.textColor = isOn ? format.mediumTextSelectedColor : format.mediumTextColor
+            }
+            
+            if let color = dataSource?.dateViewCell(self, bottomTextColorByDate: self.date) {
+                bottomLabel.textColor = color
+            } else {
+                bottomLabel.textColor = isOn ? format.bottomTextSelectedColor : format.bottomTextColor
+            }
+            
             // isSelected = isOn
         }
     }

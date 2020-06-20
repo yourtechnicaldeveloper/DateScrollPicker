@@ -285,4 +285,20 @@ extension DateScrollPicker: DateViewCellDataSource {
     func dateViewCell(_ dateViewCell: DateViewCell, dotColorByDate date: Date) -> UIColor? {
         return dataSource?.dateScrollPicker(self, dotColorByDate: date)
     }
+    
+    func dateViewCell(_ dateViewCell: DateViewCell, topTextColorByDate date: Date) -> UIColor? {
+        return dataSource?.dateScrollPicker(self, topTextColorByDate: date)
+    }
+    
+    func dateViewCell(_ dateViewCell: DateViewCell, mediumTextColorByDate date: Date) -> UIColor? {
+        return dataSource?.dateScrollPicker(self, mediumTextColorByDate: date)
+    }
+    
+    func dateViewCell(_ dateViewCell: DateViewCell, bottomTextColorByDate date: Date) -> UIColor? {
+        return dataSource?.dateScrollPicker(self, bottomTextColorByDate: date)
+    }
+    
+    func dateViewCell(_ dateViewCell: DateViewCell, dayBackgroundColorByDate date: Date) -> UIColor? {
+        return dataSource?.dateScrollPicker(self, dayBackgroundColorByDate: date)
+    }
 }
