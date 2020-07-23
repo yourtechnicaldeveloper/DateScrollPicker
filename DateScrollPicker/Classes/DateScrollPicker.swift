@@ -79,6 +79,7 @@ open class DateScrollPicker: UIView {
         self.minDate = minDate
         self.maxDate = maxDate
         dateItems = []
+        selectedIndexPath = nil
         setupInitialDays()
     }
     
@@ -93,6 +94,10 @@ open class DateScrollPicker: UIView {
             }
             dateItems.append(DateScrollItem(date: currentDate, selected: false, separator: false))
             currentDate = currentDate.addDays(1)!
+        }
+        
+        UIView.performWithoutAnimation {
+            self.collectionView.reloadData()
         }
     }
     
