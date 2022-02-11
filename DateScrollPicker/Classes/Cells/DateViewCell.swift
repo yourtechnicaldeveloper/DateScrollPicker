@@ -14,10 +14,6 @@ protocol DateViewCellDataSource {
     func dateViewCell(_ dateViewCell: DateViewCell, bottomAttributedStringByDate date: Date) -> NSAttributedString?
     func dateViewCell(_ dateViewCell: DateViewCell, dataAttributedStringByDate date: Date) -> NSAttributedString?
     func dateViewCell(_ dateViewCell: DateViewCell, dotColorByDate date: Date) -> UIColor?
-    func dateViewCell(_ dateViewCell: DateViewCell, topTextColorByDate date: Date) -> UIColor?
-    func dateViewCell(_ dateViewCell: DateViewCell, mediumTextColorByDate date: Date) -> UIColor?
-    func dateViewCell(_ dateViewCell: DateViewCell, bottomTextColorByDate date: Date) -> UIColor?
-    func dateViewCell(_ dateViewCell: DateViewCell, dayBackgroundColorByDate date: Date) -> UIColor?
 }
 
 final class DateViewCell: UICollectionViewCell {
@@ -42,14 +38,14 @@ final class DateViewCell: UICollectionViewCell {
         didSet {
             topLabel.attributedText = dataSource?.dateViewCell(self, topAttributedStringByDate: date)
             mediumLabel.attributedText = dataSource?.dateViewCell(self, mediumAttributedStringByDate: date)
-            bottomLabel.attributedText = dataSource?.dateViewCell(self, bottomAttributedStringByDate: date)
+            /*bottomLabel.attributedText = dataSource?.dateViewCell(self, bottomAttributedStringByDate: date)
             dataLabel.attributedText = dataSource?.dateViewCell(self, dataAttributedStringByDate: date)
             dotView.backgroundColor = dataSource?.dateViewCell(self, dotColorByDate: date) ?? .clear
             
             let emptyData = dataSource?.dateViewCell(self, dataAttributedStringByDate: date) == nil
             let emptyDot = dataSource?.dateViewCell(self, dotColorByDate: date) == nil
-            dotViewHeightConstraint.constant = emptyDot ? 0 : format.dotWidth
-            dataLabelTopConstraint.constant = (emptyData && emptyDot) ? 0 : format.topMarginData
+            dotViewHeightConstraint.constant = emptyDot ? 0 : format.dotWidth*/
+            //dataLabelTopConstraint.constant = (emptyData && emptyDot) ? 0 : format.topMarginData
         }
     }
     
@@ -58,7 +54,7 @@ final class DateViewCell: UICollectionViewCell {
         didSet {
             topLabel.font = format.topFont
             mediumLabel.font = format.mediumFont
-            bottomLabel.font = format.bottomFont
+            //bottomLabel.font = format.bottomFont
             containerView.layer.cornerRadius = format.dayRadius
             containerView.clipsToBounds = true
             topContainerConstraint.constant = format.dayPadding
@@ -71,43 +67,18 @@ final class DateViewCell: UICollectionViewCell {
     /// Highlighted
     var isOn: Bool = false {
         didSet {
-            
-            if isOn {
-                if let color = dataSource?.dateViewCell(self, dayBackgroundColorByDate: self.date) {
-                    containerView.backgroundColor = color
-                } else {
-                    containerView.backgroundColor = format.dayBackgroundSelectedColor
-                }
-            } else {
-                containerView.backgroundColor = isOn ? format.dayBackgroundSelectedColor : format.dayBackgroundColor
-            }
-            
-            if let color = dataSource?.dateViewCell(self, topTextColorByDate: self.date) {
-                topLabel.textColor = color
-            } else {
-                topLabel.textColor = isOn ? format.topTextSelectedColor : format.topTextColor
-            }
-            
-            if let color = dataSource?.dateViewCell(self, mediumTextColorByDate: self.date) {
-                mediumLabel.textColor = color
-            } else {
-                mediumLabel.textColor = isOn ? format.mediumTextSelectedColor : format.mediumTextColor
-            }
-            
-            if let color = dataSource?.dateViewCell(self, bottomTextColorByDate: self.date) {
-                bottomLabel.textColor = color
-            } else {
-                bottomLabel.textColor = isOn ? format.bottomTextSelectedColor : format.bottomTextColor
-            }
-            
+            containerView.backgroundColor = isOn ? format.dayBackgroundSelectedColor : format.dayBackgroundColor
+            topLabel.textColor = isOn ? format.topTextSelectedColor : format.topTextColor
+            mediumLabel.textColor = isOn ? format.mediumTextSelectedColor : format.mediumTextColor
+           // bottomLabel.textColor = isOn ? format.bottomTextSelectedColor : format.bottomTextColor
             // isSelected = isOn
         }
     }
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        dotView.layer.cornerRadius = 5
-        dotView.clipsToBounds = true
+        /*dotView.layer.cornerRadius = 5
+        dotView.clipsToBounds = true*/
     }
 }
 
@@ -115,7 +86,7 @@ extension DateViewCell {
     
     /// Selection animation with damping
     func animateSelection(completion: ((Bool) -> Void)?) {
-        containerView.transform = CGAffineTransform(scaleX: format.animationScaleFactor, y: format.animationScaleFactor)
+         containerView.transform = CGAffineTransform(scaleX: format.animationScaleFactor, y: format.animationScaleFactor)
         isOn = true
         UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.5, initialSpringVelocity: 0.2, options: .curveEaseIn, animations: {
             self.containerView.transform = CGAffineTransform.identity

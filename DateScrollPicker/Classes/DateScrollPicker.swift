@@ -45,9 +45,6 @@ open class DateScrollPicker: UIView {
         }
     }
     
-    private var minDate: Date?
-    
-    private var maxDate: Date?
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -75,17 +72,9 @@ open class DateScrollPicker: UIView {
         manager.format = format
     }
     
-    open func setMinMaxDates(minDate: Date? = nil, maxDate: Date? = nil) {
-        self.minDate = minDate
-        self.maxDate = maxDate
-        dateItems = []
-        selectedIndexPath = nil
-        setupInitialDays()
-    }
-    
     private func setupInitialDays() {
-        let monthStartDate = minDate ?? Date().firstDateOfMonth().addMonth(-12)!
-        let monthEndDate = maxDate ?? Date().firstDateOfMonth().addMonth(12)!
+        let monthStartDate = Date().firstDateOfMonth().addMonth(-12)!
+        let monthEndDate = Date().firstDateOfMonth().addMonth(12)!
         var currentDate = monthStartDate
         
         while currentDate < monthEndDate {
@@ -94,10 +83,6 @@ open class DateScrollPicker: UIView {
             }
             dateItems.append(DateScrollItem(date: currentDate, selected: false, separator: false))
             currentDate = currentDate.addDays(1)!
-        }
-        
-        UIView.performWithoutAnimation {
-            self.collectionView.reloadData()
         }
     }
     
@@ -135,7 +120,7 @@ extension DateScrollPicker: DateScrollPickerInterface {
 extension DateScrollPicker {
     
     private func indexPath(date: Date) -> IndexPath? {
-        guard let index = dateItems.firstIndex(where: {$0.date.plain() == date && $0.separator == false }) else { return nil }
+        guard let index = dateItems.firstIndex(where: {$0.date == date && $0.separator == false }) else { return nil }
         return IndexPath(item: index, section: 0)
     }
     
@@ -220,14 +205,10 @@ extension DateScrollPicker: UICollectionViewDelegate, UICollectionViewDataSource
     
     public func scrollViewDidScroll(_ scrollView: UIScrollView) {
         if collectionView.contentOffset.x < 10 {
-            if minDate == nil {
-                insertNewItems(.previous)
-            }
+            insertNewItems(.previous)
         }
         if collectionView.contentOffset.x > collectionView!.contentSize.width - collectionView.frame.size.width {
-            if maxDate == nil {
-                insertNewItems(.next)
-            }
+            insertNewItems(.next)
         }
         if format.fadeEnabled {
             collectionView.updateFadeCells()
@@ -245,27 +226,6 @@ extension DateScrollPicker: UICollectionViewDelegateFlowLayout {
     
     public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         return CGSize(width: collectionView.frame.size.width / CGFloat(format.days), height: collectionView.frame.size.height)
-    }
-    
-    public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
-        
-        let cellWidth = collectionView.frame.size.width / CGFloat(format.days)
-        
-        
-        guard cellWidth * CGFloat(collectionView.numberOfItems(inSection: 0)) < collectionView.frame.width  else {
-            return .zero
-        }
-        
-        /// Center items horizontally if total width of items is less than the collection view width
-        
-        let totalCellWidth = cellWidth * CGFloat(collectionView.numberOfItems(inSection: 0))
-        let totalSpacingWidth = CGFloat(0 * (collectionView.numberOfItems(inSection: 0) - 1))
-        
-        let leftInset = (collectionView.layer.frame.size.width - CGFloat(totalCellWidth + totalSpacingWidth)) / 2
-        let rightInset = leftInset
-        
-        return UIEdgeInsets(top: 0, left: leftInset, bottom: 0, right: rightInset)
-
     }
 }
 
@@ -289,21 +249,5 @@ extension DateScrollPicker: DateViewCellDataSource {
     
     func dateViewCell(_ dateViewCell: DateViewCell, dotColorByDate date: Date) -> UIColor? {
         return dataSource?.dateScrollPicker(self, dotColorByDate: date)
-    }
-    
-    func dateViewCell(_ dateViewCell: DateViewCell, topTextColorByDate date: Date) -> UIColor? {
-        return dataSource?.dateScrollPicker(self, topTextColorByDate: date)
-    }
-    
-    func dateViewCell(_ dateViewCell: DateViewCell, mediumTextColorByDate date: Date) -> UIColor? {
-        return dataSource?.dateScrollPicker(self, mediumTextColorByDate: date)
-    }
-    
-    func dateViewCell(_ dateViewCell: DateViewCell, bottomTextColorByDate date: Date) -> UIColor? {
-        return dataSource?.dateScrollPicker(self, bottomTextColorByDate: date)
-    }
-    
-    func dateViewCell(_ dateViewCell: DateViewCell, dayBackgroundColorByDate date: Date) -> UIColor? {
-        return dataSource?.dateScrollPicker(self, dayBackgroundColorByDate: date)
     }
 }

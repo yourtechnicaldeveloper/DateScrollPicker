@@ -23,6 +23,8 @@ final class SeparatorViewCell: UICollectionViewCell {
         didSet {
             monthLabel.text = date.format(dateFormat: format.separatorTopDateFormat).uppercased()
             yearLabel.text = date.format(dateFormat: format.separatorBottomDateFormat)
+            yearLabel.text = ""
+            yearLabel.isHidden = true
         }
     }
     

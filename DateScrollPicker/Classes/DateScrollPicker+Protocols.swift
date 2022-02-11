@@ -79,15 +79,6 @@ public protocol DateScrollPickerDataSource: class {
      - returns: dot color
      */
     func dateScrollPicker(_ dateScrollPicker: DateScrollPicker, dotColorByDate date: Date) -> UIColor?
-    
-    func dateScrollPicker(_ dateScrollPicker: DateScrollPicker, topTextColorByDate date: Date) -> UIColor?
-    
-    func dateScrollPicker(_ dateScrollPicker: DateScrollPicker, mediumTextColorByDate date: Date) -> UIColor?
-    
-    func dateScrollPicker(_ dateScrollPicker: DateScrollPicker, bottomTextColorByDate date: Date) -> UIColor?
-    
-    func dateScrollPicker(_ dateScrollPicker: DateScrollPicker, dayBackgroundColorByDate date: Date) -> UIColor?
-
 }
 
 public extension DateScrollPickerDataSource {
@@ -124,22 +115,6 @@ public extension DateScrollPickerDataSource {
     
     func dateScrollPicker(_ dateScrollPicker: DateScrollPicker, dotColorByDate date: Date) -> UIColor? {
         // Optional
-        return nil
-    }
-    
-    func dateScrollPicker(_ dateScrollPicker: DateScrollPicker, topTextColorByDate date: Date) -> UIColor? {
-        return nil
-    }
-    
-    func dateScrollPicker(_ dateScrollPicker: DateScrollPicker, mediumTextColorByDate date: Date) -> UIColor? {
-        return nil
-    }
-    
-    func dateScrollPicker(_ dateScrollPicker: DateScrollPicker, bottomTextColorByDate date: Date) -> UIColor? {
-        return nil
-    }
-    
-    func dateScrollPicker(_ dateScrollPicker: DateScrollPicker, dayBackgroundColorByDate date: Date) -> UIColor? {
         return nil
     }
 }
